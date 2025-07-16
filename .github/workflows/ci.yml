@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Prepare Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Install Clojure tools
+        uses: DeLaGuardo/setup-clojure@9.3
+        with:
+          lein: 2.9.8
+
+      - name: Run tests
+        run: lein spec
