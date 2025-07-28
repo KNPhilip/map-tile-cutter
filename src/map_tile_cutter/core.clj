@@ -24,7 +24,9 @@
       :on-close :exit)))
 
 (defn -main []
-  (let [window (make-mainframe)]
-    (pack! window)
-    (show! window)
-    ) "Hello World")
+  (native!)
+  (invoke-later
+    (-> (make-mainframe)
+        pack!
+        (config! :size [800 :by 400])
+        show!)))
