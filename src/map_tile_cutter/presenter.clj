@@ -13,11 +13,19 @@
             (label :text "Cuts:")
             (text)
             (label :text "Background color:")
-            (text)]))
+            (text)
+            (label :text "Extension:")
+            (combobox :model ["PNG"
+                              "JPEG"
+                              "GIF"])]))
 
 (defn export-section []
   (vertical-panel
-    :items [(label :text "Export path:")
+    :items [(label    :text "Format:")
+            (combobox :model ["z/x_y.png"
+                              "z_x_y.png"
+                              "z/x/y.png"])
+            (label :text "Export path:")
             (text)]))
 
 (defn mainframe-content []
