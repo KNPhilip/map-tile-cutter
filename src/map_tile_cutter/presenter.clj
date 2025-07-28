@@ -3,30 +3,38 @@
 
 (defn input-section []
   (vertical-panel
-    :items [(label :text "Image path:")
-            (text)]))
+    :items [(horizontal-panel
+              :items [(label :text "Image path:")
+                      (text)]
+            )]))
 
 (defn cutting-options-section []
   (vertical-panel
-    :items [(label :text "Tile size:")
-            (text)
-            (label :text "Cuts:")
-            (text)
-            (label :text "Background color:")
-            (text)
-            (label :text "Extension:")
-            (combobox :model ["PNG"
-                              "JPEG"
-                              "GIF"])]))
+    :items [(horizontal-panel
+              :items [(label :text "Tile size:")
+                      (text)
+                      (label :text "Cuts:")
+                      (text)])
+            (horizontal-panel
+              :items [(label :text "Background color:")
+                      (text)
+                      (label :text "Extension:")
+                      (combobox :model ["PNG"
+                                        "JPEG"
+                                        "GIF"])])
+            ]))
 
 (defn export-section []
   (vertical-panel
-    :items [(label    :text "Format:")
-            (combobox :model ["z/x_y.png"
-                              "z_x_y.png"
-                              "z/x/y.png"])
-            (label :text "Export path:")
-            (text)]))
+    :items [(horizontal-panel
+              :items [(label :text "Format:")
+                      (combobox :model ["z/x_y.png"
+                                        "z_x_y.png"
+                                        "z/x/y.png"])])
+            (horizontal-panel
+              :items [(label :text "Export path:")
+                      (text)])
+           ]))
 
 (defn mainframe-content []
   (let [input (input-section)
