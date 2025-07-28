@@ -1,6 +1,14 @@
 (ns map-tile-cutter.widgets
   (:import [javax.swing Box])
-  (:use [seesaw.core]))
+  (:use [seesaw.core]
+        [seesaw.font]))
+
+(defn headline [title]
+  (horizontal-panel
+    :items [(label :text title
+                   :font (font :name "SansSerif"
+                               :style :bold
+                               :size 15))]))
 
 (defn horizontal-strut [n]
   (Box/createHorizontalStrut n))

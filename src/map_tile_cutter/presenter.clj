@@ -4,14 +4,19 @@
 
 (defn input-section []
   (vertical-panel
-    :items [(horizontal-panel
+    :items [(headline "Input")
+            (separator)
+            (horizontal-panel
               :items [(label :text "Image path:")
                       (text  :size [500 :by 30])]
             )]))
 
 (defn cutting-options-section []
   (vertical-panel
-    :items [(glue)
+    :items [(separator)
+            (headline "Cutting Options")
+            (separator)
+            (glue)
             (horizontal-panel
               :items [(label    :text "Tile size:")
                       (text     :text "256" :size [200 :by 30])
@@ -36,7 +41,10 @@
 
 (defn export-section []
   (vertical-panel
-    :items [(horizontal-panel
+    :items [(separator)
+            (headline "Export")
+            (separator)
+            (horizontal-panel
               :items [(label    :text "Format:")
                       (combobox :size [200 :by 30]
                                 :model ["z/x_y.png"
