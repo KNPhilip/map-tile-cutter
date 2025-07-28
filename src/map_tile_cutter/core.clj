@@ -7,19 +7,24 @@
         stat-panel (top-bottom-split stat-label stat-data)]
     stat-panel))
 
-(defn -main
-  [& args]
-  (let [window (frame :title "Map Tile Cutter")
-        input-section (make-section "Input" :input-options)
-        cutting-options-section (make-section "Cutting Options" :cut-ops)
-        export-section (make-section "Export" :export-options)]
+(defn mainframe-content []
+  (let [input (make-section "Input" :input-options)
+        cutting-options (make-section "Cutting Options" :cut-ops)
+        export (make-section "Export" :export-options)]
+    (border-panel
+      :north input
+      :center cutting-options
+      :south export)))
 
-    (config! window :content
-      (vertical-panel :items
-        (concat [input-section
-                 cutting-options-section
-                 export-section])))
+(defn make-mainframe []
+  (let [content (mainframe-content)]
+    (frame
+      :title "Map Tile Cutter"
+      :content content
+      :on-close :exit)))
 
+(defn -main []
+  (let [window (make-mainframe)]
     (pack! window)
     (show! window)
     ) "Hello World")
