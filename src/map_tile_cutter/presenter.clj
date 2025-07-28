@@ -1,16 +1,29 @@
 (ns map-tile-cutter.presenter
   (:use [seesaw.core]))
 
-(defn make-section [name id]
-  (let [stat-label (label name)
-        stat-data (label :text "" :id id :size [100 :by 20])
-        stat-panel (top-bottom-split stat-label stat-data)]
-    stat-panel))
+(defn input-section []
+  (vertical-panel
+    :items [(label :text "Image path:")
+            (text)]))
+
+(defn cutting-options-section []
+  (vertical-panel
+    :items [(label :text "Tile size:")
+            (text)
+            (label :text "Cuts:")
+            (text)
+            (label :text "Background color:")
+            (text)]))
+
+(defn export-section []
+  (vertical-panel
+    :items [(label :text "Export path:")
+            (text)]))
 
 (defn mainframe-content []
-  (let [input (make-section "Input" :input-options)
-        cutting-options (make-section "Cutting Options" :cut-ops)
-        export (make-section "Export" :export-options)]
+  (let [input (input-section)
+        cutting-options (cutting-options-section)
+        export (export-section)]
     (border-panel
       :north input
       :center cutting-options
