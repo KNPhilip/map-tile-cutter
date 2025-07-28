@@ -5,21 +5,22 @@
   (vertical-panel
     :items [(horizontal-panel
               :items [(label :text "Image path:")
-                      (text)]
+                      (text  :size [500 :by 30])]
             )]))
 
 (defn cutting-options-section []
   (vertical-panel
     :items [(horizontal-panel
               :items [(label    :text "Tile size:")
-                      (text     :text "256")
+                      (text     :text "256" :size [200 :by 30])
                       (label    :text "Cuts:")
-                      (text     :text "1")])
+                      (text     :text "1" :size [200 :by 30])])
             (horizontal-panel
               :items [(label    :text "Background color:")
-                      (text     :text "#00FFFFF")
+                      (text     :text "#00FFFFF" :size [200 :by 30])
                       (label    :text "Extension:")
-                      (combobox :model ["PNG"
+                      (combobox :size [200 :by 30]
+                                :model ["PNG"
                                         "JPEG"
                                         "GIF"])])
             ]))
@@ -32,12 +33,13 @@
   (vertical-panel
     :items [(horizontal-panel
               :items [(label    :text "Format:")
-                      (combobox :model ["z/x_y.png"
+                      (combobox :size [200 :by 30]
+                                :model ["z/x_y.png"
                                         "z_x_y.png"
                                         "z/x/y.png"])])
             (horizontal-panel
               :items [(label :text "Export path:")
-                      (text)])
+                      (text :size [500 :by 30])])
             (submit-button)]))
 
 (defn mainframe-content []
