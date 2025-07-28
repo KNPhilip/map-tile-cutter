@@ -1,4 +1,5 @@
 (ns map-tile-cutter.presenter
+  (:require [map-tile-cutter.widgets :refer :all])
   (:use [seesaw.core]))
 
 (defn input-section []
@@ -10,20 +11,24 @@
 
 (defn cutting-options-section []
   (vertical-panel
-    :items [(horizontal-panel
+    :items [(glue)
+            (horizontal-panel
               :items [(label    :text "Tile size:")
                       (text     :text "256" :size [200 :by 30])
+                      (horizontal-strut 30)
                       (label    :text "Cuts:")
                       (text     :text "1" :size [200 :by 30])])
+            (glue)
             (horizontal-panel
               :items [(label    :text "Background color:")
                       (text     :text "#00FFFFF" :size [200 :by 30])
+                      (horizontal-strut 30)
                       (label    :text "Extension:")
                       (combobox :size [200 :by 30]
                                 :model ["PNG"
                                         "JPEG"
                                         "GIF"])])
-            ]))
+            (glue)]))
 
 (defn submit-button []
   (horizontal-panel
@@ -39,7 +44,7 @@
                                         "z/x/y.png"])])
             (horizontal-panel
               :items [(label :text "Export path:")
-                      (text :size [500 :by 30])])
+                      (text  :size [500 :by 30])])
             (submit-button)]))
 
 (defn mainframe-content []
@@ -48,7 +53,7 @@
         export (export-section)]
     (border-panel
       :north input
-      :center cutting-options
+      :center (glued-section cutting-options)
       :south export)))
 
 (defn make-mainframe []
