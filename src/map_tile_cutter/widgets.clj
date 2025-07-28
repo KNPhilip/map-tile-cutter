@@ -1,7 +1,6 @@
 (ns map-tile-cutter.widgets
   (:import [javax.swing Box])
-  (:use [seesaw.core]
-        [seesaw.font]))
+  (:use (seesaw [core] [font])))
 
 (defn headline [title]
   (horizontal-panel
