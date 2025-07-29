@@ -1,5 +1,6 @@
 (ns map-tile-cutter.presenter
   (:require [map-tile-cutter.widgets :refer :all])
+  (:require [map-tile-cutter.interactor :as interactor])
   (:use [seesaw.core]))
 
 (defn input-section []
@@ -43,12 +44,6 @@
                                         "GIF"])])
             (glue)]))
 
-(defn submit-button [frame]
-  (horizontal-panel
-    :items [(button :text "Submit"
-                    :listen [:action (fn [_]
-                              (alert "Submit"))])]))
-
 (defn export-section [submit-btn]
   (vertical-panel
     :items [(separator)
@@ -66,6 +61,13 @@
                       (text  :size [500 :by 30]
                              :id :export-path)])
             submit-btn]))
+
+(defn submit-button [frame]
+  (horizontal-panel
+    :items [(button :text "Submit"
+                    :listen [:action (fn [_]
+                              (interactor/validate-and-submit frame))]
+            )]))
 
 (defn mainframe-content [mainframe]
   (let [input (input-section)
