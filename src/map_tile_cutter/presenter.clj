@@ -40,7 +40,7 @@
                       (combobox :size [200 :by 30]
                                 :id :extension
                                 :model ["PNG"
-                                        "JPEG"
+                                        "JPG"
                                         "GIF"])])
             (glue)]))
 
