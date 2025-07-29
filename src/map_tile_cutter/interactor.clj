@@ -5,9 +5,6 @@
   (:import [javax.imageio ImageIO])
   (:use seesaw.core))
 
-(defn read-file [path]
-  (ImageIO/read (io/file path)))
-
 (defn get-format-without-extension [format]
   (let [dot-idx (.lastIndexOf format ".")]
     (if (and (pos? dot-idx) (< dot-idx (count format)))
@@ -23,23 +20,24 @@
       "z/x/y" (str z "/" x "/" y "." extension)
       (str z "_" x "_" y "." extension))))
 
+(defn read-file [path]
+  (ImageIO/read (io/file path)))
+
 (defn cut-tiles-spec [img-path tile-size cuts bg-color extension format exp-path]
-  (let [cuts (Integer/parseInt cuts)
-        extension (str/lower-case extension)
+  (let [tile-size (Integer/parseInt tile-size)
+        cuts (Integer/parseInt cuts)
         img (read-file img-path)
         width (.getWidth img)
         height (.getHeight img)
         num-tiles (int (Math/pow 4 cuts))
         rows (int (Math/sqrt num-tiles))
-        cols (int (Math/sqrt num-tiles))
-        step-x (int (/ width cols))
-        step-y (int (/ height rows))]
+        cols (int (Math/sqrt num-tiles))]
     (dotimes [row rows]
       (dotimes [col cols]
-        (let [x (* col step-x)
-              y (* row step-y)
-              w (min step-x (- width x))
-              h (min step-y (- height y))
+        (let [x (* col tile-size)
+              y (* row tile-size)
+              w (min tile-size (- width x))
+              h (min tile-size (- height y))
               sub-img (.getSubimage img x y w h)
               relative-path (format-path format cuts col row extension)
               output-file (io/file exp-path relative-path)]

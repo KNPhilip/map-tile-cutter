@@ -9,12 +9,12 @@
 ;;   (it "can successfully cut tiles."
 ;;     (should= "Tiles have been created and saved."
 ;;              (cut-tiles-spec
-;;                "/Users/dkphkrni/Pictures/summer.jpg"
+;;                "/Users/dkphkrni/Pictures/square.jpg"
 ;;                "256"
 ;;                "1"
 ;;                "#00FFFFF"
 ;;                "JPG"
-;;                "z/x/y.png"
+;;                "z/x_y.png"
 ;;                "/Users/dkphkrni/Pictures"))))
 
 (describe "Formatting"
