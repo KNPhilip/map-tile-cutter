@@ -2,6 +2,10 @@
   (:import [javax.swing Box])
   (:use (seesaw [core] [font])))
 
+(defn get-widget-text [frame id]
+  (partial (config
+    (select frame [id]) :text)))
+
 (defn headline [title]
   (horizontal-panel
     :items [(label :text title
