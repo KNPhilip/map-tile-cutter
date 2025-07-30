@@ -10,7 +10,8 @@
     (should-not-be-nil (validate-img-path "image/file/with/no/extension"))
     (should-not-be-nil (validate-img-path "unsupported-extension.txt"))
     (should-not-be-nil (validate-img-path "unsupported-extension.clj"))
-    (should-not-be-nil (validate-img-path "unsupported-extension.exe")))
+    (should-not-be-nil (validate-img-path "unsupported-extension.exe"))
+    (should-not-be-nil (validate-img-path nil)))
   (it "returns error message if file does not exist."
     (should-not-be-nil (validate-img-path "nonexistent.jpg")))
   (it "returns nil for valid existing file."
@@ -25,17 +26,33 @@
     (should-not-be-nil (validate-tile-size ""))
     (should-not-be-nil (validate-tile-size "abc"))
     (should-not-be-nil (validate-tile-size "-10"))
-    (should-not-be-nil (validate-tile-size "0")))
+    (should-not-be-nil (validate-tile-size "0"))
+    (should-not-be-nil (validate-tile-size nil)))
   (it "returns nil for valid integer string."
-    (should= nil (validate-tile-size "256"))
-    (should= nil (validate-tile-size "34"))))
+    (should-be-nil (validate-tile-size "256"))
+    (should-be-nil (validate-tile-size "34"))))
 
 (describe "Validate cuts"
   (it "returns error message for invalid inputs."
     (should-not-be-nil (validate-cuts ""))
     (should-not-be-nil (validate-cuts "not-a-number"))
     (should-not-be-nil (validate-cuts "-3"))
-    (should-not-be-nil (validate-cuts "0")))
+    (should-not-be-nil (validate-cuts "0"))
+    (should-not-be-nil (validate-cuts nil)))
   (it "returns nil for valid integer string"
-    (should= nil (validate-cuts "2"))
-    (should= nil (validate-cuts "7"))))
+    (should-be-nil (validate-cuts "2"))
+    (should-be-nil (validate-cuts "7"))))
+
+(describe "Validate bg-color"
+  (it "returns error message for missing or blank value."
+    (should-not-be-nil (validate-bg-color ""))
+    (should-not-be-nil (validate-bg-color nil)))
+  (it "returns error message for invalid hex formats."
+    (should-not-be-nil (validate-bg-color "000000"))
+    (should-not-be-nil (validate-bg-color "#FFF"))
+    (should-not-be-nil (validate-bg-color "#12345g"))
+    (should-not-be-nil (validate-bg-color "#1234567")))
+  (it "returns nil for valid hex colors."
+    (should-be-nil (validate-bg-color "#000000"))
+    (should-be-nil (validate-bg-color "#ffffff"))
+    (should-be-nil (validate-bg-color "#ABCDEF"))))

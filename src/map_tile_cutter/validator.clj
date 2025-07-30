@@ -47,11 +47,22 @@
     "Cuts must be a positive integer."
     :else nil))
 
-(defn validate-inputs [img-path tile-size cuts bg-color extension format exp-path]
+(def hex-color-pattern #"^#(?:[0-9a-fA-F]{6})$")
+
+(defn validate-bg-color [color]
+  (cond
+    (str/blank? color)
+    "Please fill out the background color."
+    (not (re-matches hex-color-pattern color))
+    "Background color must be a valid hex color (e.g., #000000)."
+    :else nil))
+
+(defn validate-inputs [img-path tile-size cuts bg-color exp-path]
   (or
     (validate-img-path img-path)
     (validate-tile-size tile-size)
-    (validate-cuts cuts)))
+    (validate-cuts cuts)
+    (validate-bg-color bg-color)))
 
 (defn validate-and-submit [frame]
   (let [img-path  (get-widget-text frame :#image-path)

@@ -17,7 +17,7 @@
               )])))
 
 (defn cutting-options-section [frame]
-  (let [color-field (text :text "#00FFFFF"
+  (let [color-field (text :text "#000000"
                           :size [200 :by 30]
                           :id :bg-color)]
     (vertical-panel
