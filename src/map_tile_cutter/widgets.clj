@@ -13,6 +13,29 @@
                                :style :bold
                                :size 15))]))
 
+(defn browse-file [frame text-field]
+  (let [file-chooser (javax.swing.JFileChooser.)]
+    (when (= (.showOpenDialog file-chooser frame) javax.swing.JFileChooser/APPROVE_OPTION)
+      (let [selected-file (.getSelectedFile file-chooser)]
+        (config! text-field :text (.getAbsolutePath selected-file))))))
+
+(defn browse-file-btn [frame field]
+  (button :text "Browse"
+          :listen [:action (fn [_]
+                    (browse-file frame field))]))
+
+(defn browse-directory [frame text-field]
+  (let [dir-chooser (javax.swing.JFileChooser.)]
+    (.setFileSelectionMode dir-chooser javax.swing.JFileChooser/DIRECTORIES_ONLY)
+    (when (= (.showOpenDialog dir-chooser frame) javax.swing.JFileChooser/APPROVE_OPTION)
+      (let [selected-dir (.getSelectedFile dir-chooser)]
+        (config! text-field :text (.getAbsolutePath selected-dir))))))
+
+(defn browse-dir-btn [frame field]
+  (button :text "Browse"
+          :listen [:action (fn [_]
+                    (browse-directory frame field))]))
+
 (defn horizontal-strut [n]
   (Box/createHorizontalStrut n))
 

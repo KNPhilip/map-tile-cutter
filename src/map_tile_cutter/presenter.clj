@@ -3,15 +3,17 @@
   (:require [map-tile-cutter.interactor :as interactor])
   (:use [seesaw.core]))
 
-(defn input-section []
-  (vertical-panel
-    :items [(headline "Input")
-            (separator)
-            (horizontal-panel
-              :items [(label :text "Image path:")
-                      (text  :size [500 :by 30]
-                             :id :image-path)]
-            )]))
+(defn input-section [frame]
+  (let [field (text :size [450 :by 30]
+                    :id :image-path)]
+    (vertical-panel
+      :items [(headline "Input")
+              (separator)
+              (horizontal-panel
+                :items [(label :text "Image path:")
+                        field
+                        (browse-file-btn frame field)]
+              )])))
 
 (defn cutting-options-section []
   (vertical-panel
@@ -44,24 +46,6 @@
                                         "GIF"])])
             (glue)]))
 
-(defn export-section [submit-btn]
-  (vertical-panel
-    :items [(separator)
-            (headline "Export")
-            (separator)
-            (horizontal-panel
-              :items [(label    :text "Format:")
-                      (combobox :size [200 :by 30]
-                                :id :format
-                                :model ["z/x_y.png"
-                                        "z_x_y.png"
-                                        "z/x/y.png"])])
-            (horizontal-panel
-              :items [(label :text "Export path:")
-                      (text  :size [500 :by 30]
-                             :id :export-path)])
-            submit-btn]))
-
 (defn submit-button [frame]
   (horizontal-panel
     :items [(button :text "Submit"
@@ -69,11 +53,30 @@
                               (interactor/validate-and-submit frame))]
             )]))
 
+(defn export-section [frame]
+  (let [field (text :size [450 :by 30]
+                    :id :export-path)]
+    (vertical-panel
+      :items [(separator)
+              (headline "Export")
+              (separator)
+              (horizontal-panel
+                :items [(label    :text "Format:")
+                        (combobox :size [200 :by 30]
+                                  :id :format
+                                  :model ["z/x_y.png"
+                                          "z_x_y.png"
+                                          "z/x/y.png"])])
+              (horizontal-panel
+                :items [(label :text "Export path:")
+                        field
+                        (browse-dir-btn frame field)])
+              (submit-button frame)])))
+
 (defn mainframe-content [mainframe]
-  (let [input (input-section)
+  (let [input (input-section mainframe)
         cutting-options (cutting-options-section)
-        submit-btn (submit-button mainframe)
-        export (export-section submit-btn)]
+        export (export-section mainframe)]
     (border-panel
       :north input
       :center (glued-section cutting-options)
