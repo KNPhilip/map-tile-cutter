@@ -1,6 +1,7 @@
 (ns map-tile-cutter.presenter
-  (:require [map-tile-cutter.widgets :refer :all])
-  (:require [map-tile-cutter.interactor :as interactor])
+  (:require [map-tile-cutter.widgets :refer :all]
+            [map-tile-cutter.interactor :as interactor]
+            [clojure.string :as str])
   (:use [seesaw.core]))
 
 (defn input-section [frame]
@@ -38,15 +39,25 @@
               (horizontal-panel
                 :items [(label    :text "Background color:")
                         color-field
-                        (color-chooser-btn frame color-field)
-                        (horizontal-strut 30)
-                        (label    :text "Extension:")
-                        (combobox :size [200 :by 30]
-                                  :id :extension
-                                  :model ["PNG"
-                                          "JPG"
-                                          "GIF"])])
+                        (color-chooser-btn frame color-field)])
               (glue)])))
+
+(def format-mapping
+  {"PNG" ["z/x_y.png" "z_x_y.png" "z/x/y.png"]
+   "JPG" ["z/x_y.jpg" "z_x_y.jpg" "z/x/y.jpg"]
+   "GIF" ["z/x_y.gif" "z_x_y.gif" "z/x/y.gif"]})
+
+(defn update-format-options [frame format-combobox]
+  (let [current-format (str (get-widget-text frame :#format))
+        extension (get-widget-text frame :#extension)
+        new-formats (get format-mapping extension)
+        base-format (first (str/split current-format #"\."))]
+    (config! format-combobox :model new-formats)
+    (let [new-format (some #(when (.startsWith % base-format) %) new-formats)]
+      (if new-format
+        (config! format-combobox :selected-item new-format)
+        (config! format-combobox :selected-item (first new-formats)))
+    )))
 
 (defn submit-button [frame]
   (horizontal-panel
@@ -57,18 +68,29 @@
 
 (defn export-section [frame]
   (let [export-field (text :size [450 :by 30]
-                           :id :export-path)]
+                           :id :export-path)
+        ext-combobox (combobox :size [200 :by 30]
+                               :id :extension
+                               :model ["PNG"
+                                       "JPG"
+                                       "GIF"])
+        format-combobox (combobox :size [200 :by 30]
+                                  :id :format
+                                  :model ["z/x_y.png"
+                                          "z_x_y.png"
+                                          "z/x/y.png"])]
+    (config! ext-combobox :listen [:selection
+      (fn [_] (update-format-options frame format-combobox))])
     (vertical-panel
       :items [(separator)
               (headline "Export")
               (separator)
               (horizontal-panel
                 :items [(label    :text "Format:")
-                        (combobox :size [200 :by 30]
-                                  :id :format
-                                  :model ["z/x_y.png"
-                                          "z_x_y.png"
-                                          "z/x/y.png"])])
+                        format-combobox
+                        (horizontal-strut 30)
+                        (label    :text "Extension:")
+                        ext-combobox])
               (horizontal-panel
                 :items [(label :text "Export path:")
                         export-field
