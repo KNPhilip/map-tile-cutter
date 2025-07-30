@@ -1,7 +1,6 @@
 (ns map-tile-cutter.interactor
   (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [map-tile-cutter.widgets :refer :all])
+            [clojure.string :as str])
   (:import [javax.imageio ImageIO])
   (:use seesaw.core))
 
@@ -65,8 +64,7 @@
           num-tiles (int (Math/pow 4 cuts))
           rows (int (Math/sqrt num-tiles))
           cols (int (Math/sqrt num-tiles))]
-      (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)
-      "Not Square!")))
+      (cut-tiles rows cols tile-size resized-img extension exp-path cuts format))))
 
 (defn cut-square-image [img tile-size cuts extension format exp-path]
   (let [width (int (* (Math/pow 2 cuts) tile-size))
@@ -75,8 +73,7 @@
         num-tiles (int (Math/pow 4 cuts))
         rows (int (Math/sqrt num-tiles))
         cols (int (Math/sqrt num-tiles))]
-    (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)
-    "Square!"))
+    (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)))
 
 (defn cut-image [img-path tile-size cuts bg-color extension format exp-path]
   (let [tile-size (Integer/parseInt tile-size)
@@ -88,13 +85,3 @@
     (if is-square?
       (cut-square-image img tile-size cuts extension format exp-path)
       (cut-non-square-image img tile-size cuts bg-color extension format exp-path))))
-
-(defn validate-and-submit [frame]
-  (let [img-path (get-widget-text frame :#image-path)
-        tile-size (get-widget-text frame :#tile-size)
-        cuts (get-widget-text frame :#cuts)
-        bg-color (get-widget-text frame :#bg-color)
-        extension (get-widget-text frame :#extension)
-        format (get-widget-text frame :#format)
-        exp-path (get-widget-text frame :#export-path)]
-    (cut-image img-path tile-size cuts bg-color extension format exp-path)))

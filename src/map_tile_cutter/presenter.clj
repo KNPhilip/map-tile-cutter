@@ -1,8 +1,8 @@
 (ns map-tile-cutter.presenter
   (:require [map-tile-cutter.widgets :refer :all]
-            [map-tile-cutter.interactor :as interactor]
+            [map-tile-cutter.validator :as validator]
             [clojure.string :as str])
-  (:use [seesaw.core]))
+  (:use seesaw.core))
 
 (defn input-section [frame]
   (let [input-field (text :size [450 :by 30]
@@ -63,7 +63,7 @@
   (horizontal-panel
     :items [(button :text "Submit"
                     :listen [:action (fn [_]
-                              (interactor/validate-and-submit frame))]
+                              (validator/validate-and-submit frame))]
             )]))
 
 (defn export-section [frame]
