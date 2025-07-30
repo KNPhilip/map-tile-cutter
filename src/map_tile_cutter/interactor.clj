@@ -30,25 +30,31 @@
       (.dispose g))
     scaled-img))
 
-(defn cut-tiles-spec-square [img tile-size cuts extension format exp-path]
+(defn cut-tiles [rows cols tile-size resized-img extension exp-path cuts format]
+  (dotimes [row rows]
+    (dotimes [col cols]
+      (let [x (* col tile-size)
+            y (* row tile-size)
+            sub-img (.getSubimage resized-img x y tile-size tile-size)
+            relative-path (format-path format cuts col row extension)
+            output-file (io/file exp-path relative-path)]
+        (io/make-parents output-file)
+        (ImageIO/write sub-img extension output-file)))))
+
+(defn cut-non-square-image [img tile-size cuts bg-color extension format exp-path]
+  "Not Square!")
+
+(defn cut-square-image [img tile-size cuts extension format exp-path]
   (let [width (int (* (Math/pow 2 cuts) tile-size))
         height (int (* (Math/pow 2 cuts) tile-size))
         resized-img (resize-img img width height)
         num-tiles (int (Math/pow 4 cuts))
         rows (int (Math/sqrt num-tiles))
         cols (int (Math/sqrt num-tiles))]
-    (dotimes [row rows]
-      (dotimes [col cols]
-        (let [x (* col tile-size)
-              y (* row tile-size)
-              sub-img (.getSubimage resized-img x y tile-size tile-size)
-              relative-path (format-path format cuts col row extension)
-              output-file (io/file exp-path relative-path)]
-          (io/make-parents output-file)
-          (ImageIO/write sub-img extension output-file))))
+    (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)
     "Square!"))
 
-(defn cut-tiles-spec [img-path tile-size cuts bg-color extension format exp-path]
+(defn cut-image [img-path tile-size cuts bg-color extension format exp-path]
   (let [tile-size (Integer/parseInt tile-size)
         cuts (Integer/parseInt cuts)
         img (read-file img-path)
@@ -56,17 +62,8 @@
         height (.getHeight img)
         is-square? (= width height)]
     (if is-square?
-      (cut-tiles-spec-square img tile-size cuts extension format exp-path)
-      "Not Square!")))
-
-(defn cut-tiles [img-path tile-size cuts bg-color extension format exp-path]
-  (alert (str "img-path: " img-path
-              "\ntile-size: " tile-size
-              "\ncuts: " cuts
-              "\nbg-color: " bg-color
-              "\nextension: " extension
-              "\nformat: " format
-              "\nexp-path: " exp-path)))
+      (cut-square-image img tile-size cuts extension format exp-path)
+      (cut-non-square-image img tile-size cuts bg-color extension format exp-path))))
 
 (defn validate-and-submit [frame]
   (let [img-path (get-widget-text frame :#image-path)
@@ -76,4 +73,4 @@
         extension (get-widget-text frame :#extension)
         format (get-widget-text frame :#format)
         exp-path (get-widget-text frame :#export-path)]
-    (cut-tiles img-path tile-size cuts bg-color extension format exp-path)))
+    (cut-image img-path tile-size cuts bg-color extension format exp-path)))

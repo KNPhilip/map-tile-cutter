@@ -2,21 +2,6 @@
   (:require [speclj.core :refer :all]
             [map-tile-cutter.interactor :refer :all]))
 
-;; Ran this locally to test the cutting functionality.
-;; Seems to work for this simple case.
-
-;; (describe "cut-tiles"
-;;   (it "can successfully cut tiles."
-;;     (should= "Square!"
-;;              (cut-tiles-spec
-;;                "/Users/dkphkrni/Pictures/square.jpg"
-;;                "256"
-;;                "1"
-;;                "#00FFFFF"
-;;                "JPG"
-;;                "z/x_y.png"
-;;                "/Users/dkphkrni/Pictures"))))
-
 (describe "Formatting"
   (it "can format path for z_x_y."
     (should= "z_x_y.jpg" (format-path "z_x_y" "z" "x" "y" "jpg"))
@@ -33,3 +18,18 @@
     (should= "1/1/0.gif" (format-path "z/x/y" "1" "1" "0" "gif"))
     (should= "4/0/0.png" (format-path "z/x/y" "4" "0" "0" "png"))
     (should= "1/0/0.jpg" (format-path "z/x/y.jpg" "1" "0" "0" "jpG"))))
+
+;; Ran this locally to test the cutting functionality.
+;; Seems to work for this simple case.
+
+;; (describe "cut-tiles"
+;;   (it "can successfully cut tiles."
+;;     (should= "Square!"
+;;              (cut-image
+;;                "/Users/dkphkrni/Pictures/square.jpg"
+;;                "256"
+;;                "1"
+;;                "#00FFFFF"
+;;                "JPG"
+;;                "z/x_y.png"
+;;                "/Users/dkphkrni/Pictures"))))
