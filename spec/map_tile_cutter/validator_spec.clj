@@ -56,3 +56,24 @@
     (should-be-nil (validate-bg-color "#000000"))
     (should-be-nil (validate-bg-color "#ffffff"))
     (should-be-nil (validate-bg-color "#ABCDEF"))))
+
+(describe "Validate export path"
+  (it "returns error message for blank or nil."
+    (should-not-be-nil (validate-export-path ""))
+    (should-not-be-nil (validate-export-path nil)))
+  (it "returns error message if path does not exist."
+    (should-not-be-nil (validate-export-path "/non/existing/directory")))
+  (it "returns error message if path is a file, not a directory."
+    (let [tmp-file (File/createTempFile "not-a-dir" ".txt")]
+      (try
+        (should-not-be-nil (validate-export-path (.getAbsolutePath tmp-file)))
+        (finally (.delete tmp-file)))
+    ))
+  (it "returns nil for a valid directory."
+    (let [tmp-dir (doto (File/createTempFile "test-dir" "")
+                    (.delete)
+                    (.mkdir))]
+      (try
+        (should-be-nil (validate-export-path (.getAbsolutePath tmp-dir)))
+        (finally (.delete tmp-dir)))
+    )))

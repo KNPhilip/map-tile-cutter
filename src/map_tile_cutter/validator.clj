@@ -57,12 +57,23 @@
     "Background color must be a valid hex color (e.g., #000000)."
     :else nil))
 
+(defn validate-export-path [path]
+  (cond
+    (str/blank? path)
+    "Please fill out the export path."
+    (not (.exists (io/file path)))
+    "Export path does not exist."
+    (not (.isDirectory (io/file path)))
+    "Export path must be a directory, not a file."
+    :else nil))
+
 (defn validate-inputs [img-path tile-size cuts bg-color exp-path]
   (or
     (validate-img-path img-path)
     (validate-tile-size tile-size)
     (validate-cuts cuts)
-    (validate-bg-color bg-color)))
+    (validate-bg-color bg-color)
+    (validate-export-path exp-path)))
 
 (defn validate-and-submit [frame]
   (let [img-path  (get-widget-text frame :#image-path)
@@ -72,8 +83,7 @@
         extension (get-widget-text frame :#extension)
         format    (get-widget-text frame :#format)
         exp-path  (get-widget-text frame :#export-path)
-        error     (validate-inputs img-path tile-size cuts bg-color
-                                   extension format exp-path)]
+        error     (validate-inputs img-path tile-size cuts bg-color exp-path)]
     (if error
       (alert error)
       (interactor/cut-image img-path tile-size cuts bg-color
