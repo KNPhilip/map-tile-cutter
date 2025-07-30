@@ -23,12 +23,20 @@
 (defn read-file [path]
   (ImageIO/read (io/file path)))
 
+(defn resize-image [img target-width target-height]
+  (let [scaled-img (java.awt.image.BufferedImage. target-width target-height java.awt.image.BufferedImage/TYPE_INT_RGB)]
+    (let [g (.createGraphics scaled-img)]
+      (.drawImage g img 0 0 target-width target-height nil)
+      (.dispose g))
+    scaled-img))
+
 (defn cut-tiles-spec [img-path tile-size cuts bg-color extension format exp-path]
   (let [tile-size (Integer/parseInt tile-size)
         cuts (Integer/parseInt cuts)
         img (read-file img-path)
-        width (.getWidth img)
-        height (.getHeight img)
+        new-width (int (* (Math/pow 2 cuts) tile-size))
+        new-height (int (* (Math/pow 2 cuts) tile-size))
+        resized-img (resize-image img new-width new-height)
         num-tiles (int (Math/pow 4 cuts))
         rows (int (Math/sqrt num-tiles))
         cols (int (Math/sqrt num-tiles))]
@@ -36,9 +44,7 @@
       (dotimes [col cols]
         (let [x (* col tile-size)
               y (* row tile-size)
-              w (min tile-size (- width x))
-              h (min tile-size (- height y))
-              sub-img (.getSubimage img x y w h)
+              sub-img (.getSubimage resized-img x y tile-size tile-size)
               relative-path (format-path format cuts col row extension)
               output-file (io/file exp-path relative-path)]
           (io/make-parents output-file)
