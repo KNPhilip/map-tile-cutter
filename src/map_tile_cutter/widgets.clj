@@ -36,6 +36,16 @@
           :listen [:action (fn [_]
                     (browse-directory frame field))]))
 
+(defn choose-color [frame text-field]
+  (let [color (javax.swing.JColorChooser/showDialog frame "Choose Background Color" java.awt.Color/WHITE)]
+    (when color
+      (config! text-field :text (format "#%06X" (bit-and (.getRGB color) 0xFFFFFF))))))
+
+(defn color-chooser-btn [frame field]
+  (button :text "Choose Color"
+          :listen [:action (fn [_]
+                    (choose-color frame field))]))
+
 (defn horizontal-strut [n]
   (Box/createHorizontalStrut n))
 

@@ -4,47 +4,49 @@
   (:use [seesaw.core]))
 
 (defn input-section [frame]
-  (let [field (text :size [450 :by 30]
-                    :id :image-path)]
+  (let [input-field (text :size [450 :by 30]
+                          :id :image-path)]
     (vertical-panel
       :items [(headline "Input")
               (separator)
               (horizontal-panel
                 :items [(label :text "Image path:")
-                        field
-                        (browse-file-btn frame field)]
+                        input-field
+                        (browse-file-btn frame input-field)]
               )])))
 
-(defn cutting-options-section []
-  (vertical-panel
-    :items [(separator)
-            (headline "Cutting Options")
-            (separator)
-            (glue)
-            (horizontal-panel
-              :items [(label    :text "Tile size:")
-                      (text     :text "256"
-                                :size [200 :by 30]
-                                :id :tile-size)
-                      (horizontal-strut 30)
-                      (label    :text "Cuts:")
-                      (text     :text "1"
-                                :size [200 :by 30]
-                                :id :cuts)])
-            (glue)
-            (horizontal-panel
-              :items [(label    :text "Background color:")
-                      (text     :text "#00FFFFF"
-                                :size [200 :by 30]
-                                :id :bg-color)
-                      (horizontal-strut 30)
-                      (label    :text "Extension:")
-                      (combobox :size [200 :by 30]
-                                :id :extension
-                                :model ["PNG"
-                                        "JPG"
-                                        "GIF"])])
-            (glue)]))
+(defn cutting-options-section [frame]
+  (let [color-field (text :text "#00FFFFF"
+                          :size [200 :by 30]
+                          :id :bg-color)]
+    (vertical-panel
+      :items [(separator)
+              (headline "Cutting Options")
+              (separator)
+              (glue)
+              (horizontal-panel
+                :items [(label    :text "Tile size:")
+                        (text     :text "256"
+                                  :size [200 :by 30]
+                                  :id :tile-size)
+                        (horizontal-strut 30)
+                        (label    :text "Cuts:")
+                        (text     :text "1"
+                                  :size [200 :by 30]
+                                  :id :cuts)])
+              (glue)
+              (horizontal-panel
+                :items [(label    :text "Background color:")
+                        color-field
+                        (color-chooser-btn frame color-field)
+                        (horizontal-strut 30)
+                        (label    :text "Extension:")
+                        (combobox :size [200 :by 30]
+                                  :id :extension
+                                  :model ["PNG"
+                                          "JPG"
+                                          "GIF"])])
+              (glue)])))
 
 (defn submit-button [frame]
   (horizontal-panel
@@ -54,8 +56,8 @@
             )]))
 
 (defn export-section [frame]
-  (let [field (text :size [450 :by 30]
-                    :id :export-path)]
+  (let [export-field (text :size [450 :by 30]
+                           :id :export-path)]
     (vertical-panel
       :items [(separator)
               (headline "Export")
@@ -69,13 +71,13 @@
                                           "z/x/y.png"])])
               (horizontal-panel
                 :items [(label :text "Export path:")
-                        field
-                        (browse-dir-btn frame field)])
+                        export-field
+                        (browse-dir-btn frame export-field)])
               (submit-button frame)])))
 
 (defn mainframe-content [mainframe]
   (let [input (input-section mainframe)
-        cutting-options (cutting-options-section)
+        cutting-options (cutting-options-section mainframe)
         export (export-section mainframe)]
     (border-panel
       :north input
