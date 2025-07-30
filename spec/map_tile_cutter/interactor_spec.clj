@@ -18,3 +18,28 @@
     (should= "1/1/0.gif" (format-path "z/x/y" "1" "1" "0" "gif"))
     (should= "4/0/0.png" (format-path "z/x/y" "4" "0" "0" "png"))
     (should= "1/0/0.jpg" (format-path "z/x/y.jpg" "1" "0" "0" "jpG"))))
+
+(describe "resize-img"
+  (it "should correctly resize image to specified dimensions."
+    (let [img (java.awt.image.BufferedImage. 100 100 java.awt.image.BufferedImage/TYPE_INT_RGB)
+          resized (resize-img img 50 75)]
+      (should= 50 (.getWidth resized))
+      (should= 75 (.getHeight resized))
+    )))
+
+(describe "create-bg-img"
+  (it "creates an image with correct size and background color."
+    (let [width 100
+          height 50
+          hex "#FF0000"
+          img (create-bg-img width height hex)
+          rgb (.getRGB img 0 0)]
+      (should= width (.getWidth img))
+      (should= height (.getHeight img))
+      (should= (bit-and rgb 0xFFFFFF) 0xFF0000))))
+
+(describe "tiles-dimensions"
+  (it "calculates correct number of rows and cols for cuts."
+    (should= [2 2] (tiles-dimensions 1))
+    (should= [4 4] (tiles-dimensions 2))
+    (should= [8 8] (tiles-dimensions 3))))

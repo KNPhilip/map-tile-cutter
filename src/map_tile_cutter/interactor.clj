@@ -37,6 +37,13 @@
     (.dispose g)
     bg-img))
 
+(defn num-tiles-from-cuts [cuts]
+  (int (Math/pow 4 cuts)))
+
+(defn tiles-dimensions [cuts]
+  (let [tiles (num-tiles-from-cuts cuts)]
+    [(int (Math/sqrt tiles)) (int (Math/sqrt tiles))]))
+
 (defn cut-tiles [rows cols tile-size resized-img extension exp-path cuts format]
   (dotimes [row rows]
     (dotimes [col cols]
@@ -61,18 +68,14 @@
     (.drawImage g img 0 0 width height nil)
     (.dispose g)
     (let [resized-img (resize-img bg-img new-width new-height)
-          num-tiles (int (Math/pow 4 cuts))
-          rows (int (Math/sqrt num-tiles))
-          cols (int (Math/sqrt num-tiles))]
+          [rows cols] (tiles-dimensions cuts)]
       (cut-tiles rows cols tile-size resized-img extension exp-path cuts format))))
 
 (defn cut-square-image [img tile-size cuts extension format exp-path]
   (let [width (int (* (Math/pow 2 cuts) tile-size))
-        height (int (* (Math/pow 2 cuts) tile-size))
+        height width
         resized-img (resize-img img width height)
-        num-tiles (int (Math/pow 4 cuts))
-        rows (int (Math/sqrt num-tiles))
-        cols (int (Math/sqrt num-tiles))]
+        [rows cols] (tiles-dimensions cuts)]
     (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)))
 
 (defn cut-image [img-path tile-size cuts bg-color extension format exp-path]
