@@ -23,20 +23,17 @@
 (defn read-file [path]
   (ImageIO/read (io/file path)))
 
-(defn resize-image [img target-width target-height]
+(defn resize-img [img target-width target-height]
   (let [scaled-img (java.awt.image.BufferedImage. target-width target-height java.awt.image.BufferedImage/TYPE_INT_RGB)]
     (let [g (.createGraphics scaled-img)]
       (.drawImage g img 0 0 target-width target-height nil)
       (.dispose g))
     scaled-img))
 
-(defn cut-tiles-spec [img-path tile-size cuts bg-color extension format exp-path]
-  (let [tile-size (Integer/parseInt tile-size)
-        cuts (Integer/parseInt cuts)
-        img (read-file img-path)
-        new-width (int (* (Math/pow 2 cuts) tile-size))
-        new-height (int (* (Math/pow 2 cuts) tile-size))
-        resized-img (resize-image img new-width new-height)
+(defn cut-tiles-spec-square [img tile-size cuts extension format exp-path]
+  (let [width (int (* (Math/pow 2 cuts) tile-size))
+        height (int (* (Math/pow 2 cuts) tile-size))
+        resized-img (resize-img img width height)
         num-tiles (int (Math/pow 4 cuts))
         rows (int (Math/sqrt num-tiles))
         cols (int (Math/sqrt num-tiles))]
@@ -49,7 +46,18 @@
               output-file (io/file exp-path relative-path)]
           (io/make-parents output-file)
           (ImageIO/write sub-img extension output-file))))
-    "Tiles have been created and saved."))
+    "Square!"))
+
+(defn cut-tiles-spec [img-path tile-size cuts bg-color extension format exp-path]
+  (let [tile-size (Integer/parseInt tile-size)
+        cuts (Integer/parseInt cuts)
+        img (read-file img-path)
+        width (.getWidth img)
+        height (.getHeight img)
+        is-square? (= width height)]
+    (if is-square?
+      (cut-tiles-spec-square img tile-size cuts extension format exp-path)
+      "Not Square!")))
 
 (defn cut-tiles [img-path tile-size cuts bg-color extension format exp-path]
   (alert (str "img-path: " img-path

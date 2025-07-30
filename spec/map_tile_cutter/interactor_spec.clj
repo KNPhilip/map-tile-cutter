@@ -7,7 +7,7 @@
 
 ;; (describe "cut-tiles"
 ;;   (it "can successfully cut tiles."
-;;     (should= "Tiles have been created and saved."
+;;     (should= "Square!"
 ;;              (cut-tiles-spec
 ;;                "/Users/dkphkrni/Pictures/square.jpg"
 ;;                "256"
