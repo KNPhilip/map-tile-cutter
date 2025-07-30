@@ -25,9 +25,33 @@
     "Image path points to a file that does not exist."
     :else nil))
 
+(defn valid-int-string? [s]
+  (try
+    (let [parsed (Integer/parseInt s)]
+      (pos? parsed))
+    (catch Exception _ false)))
+
+(defn validate-tile-size [s]
+  (cond
+    (str/blank? s)
+    "Please fill out the tile size."
+    (not (valid-int-string? s))
+    "Tile size must be a positive integer."
+    :else nil))
+
+(defn validate-cuts [s]
+  (cond
+    (str/blank? s)
+    "Please fill out the cuts."
+    (not (valid-int-string? s))
+    "Cuts must be a positive integer."
+    :else nil))
+
 (defn validate-inputs [img-path tile-size cuts bg-color extension format exp-path]
   (or
-    (validate-img-path img-path)))
+    (validate-img-path img-path)
+    (validate-tile-size tile-size)
+    (validate-cuts cuts)))
 
 (defn validate-and-submit [frame]
   (let [img-path  (get-widget-text frame :#image-path)

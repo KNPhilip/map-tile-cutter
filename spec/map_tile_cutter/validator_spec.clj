@@ -19,3 +19,23 @@
         (should= nil (validate-img-path (.getAbsolutePath tmp-file)))
         (finally (.delete tmp-file)))
     )))
+
+(describe "Validate tile-size"
+  (it "returns error message for invalid inputs."
+    (should-not-be-nil (validate-tile-size ""))
+    (should-not-be-nil (validate-tile-size "abc"))
+    (should-not-be-nil (validate-tile-size "-10"))
+    (should-not-be-nil (validate-tile-size "0")))
+  (it "returns nil for valid integer string."
+    (should= nil (validate-tile-size "256"))
+    (should= nil (validate-tile-size "34"))))
+
+(describe "Validate cuts"
+  (it "returns error message for invalid inputs."
+    (should-not-be-nil (validate-cuts ""))
+    (should-not-be-nil (validate-cuts "not-a-number"))
+    (should-not-be-nil (validate-cuts "-3"))
+    (should-not-be-nil (validate-cuts "0")))
+  (it "returns nil for valid integer string"
+    (should= nil (validate-cuts "2"))
+    (should= nil (validate-cuts "7"))))
