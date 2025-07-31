@@ -28,7 +28,7 @@
 (defn valid-int-string? [s]
   (try
     (let [parsed (Integer/parseInt s)]
-      (pos? parsed))
+      parsed)
     (catch Exception _ false)))
 
 (defn validate-tile-size [s]
@@ -36,6 +36,8 @@
     (str/blank? s)
     "Please fill out the tile size."
     (not (valid-int-string? s))
+    "Tile size must be an integer."
+    (not (pos? (Integer/parseInt s)))
     "Tile size must be a positive integer."
     :else nil))
 
@@ -44,7 +46,9 @@
     (str/blank? s)
     "Please fill out the cuts."
     (not (valid-int-string? s))
-    "Cuts must be a positive integer."
+    "Cuts must be an integer."
+    (neg? (Integer/parseInt s))
+    "Cuts cannot be a negative integer."
     :else nil))
 
 (def hex-color-pattern #"^#(?:[0-9a-fA-F]{6})$")

@@ -1,6 +1,7 @@
 (ns map-tile-cutter.interactor-spec
   (:require [speclj.core :refer :all]
-            [map-tile-cutter.interactor :refer :all]))
+            [map-tile-cutter.interactor :refer :all])
+  (:import [java.awt.image BufferedImage]))
 
 (describe "Formatting"
   (it "can format path for z_x_y."
@@ -43,3 +44,37 @@
     (should= [2 2] (tiles-dimensions 1))
     (should= [4 4] (tiles-dimensions 2))
     (should= [8 8] (tiles-dimensions 3))))
+
+(describe "Image I/O"
+  (it "exports an image file correctly."
+    (with-redefs [export-img (fn [exp-path relative-path extension img]
+                                (should= "expected-path" exp-path)
+                                (should= "expected-image.jpg" relative-path)
+                                (should= "jpg" extension)
+                                (should= 100 (.getWidth img))
+                                (should= 100 (.getHeight img)))]
+      (let [img (BufferedImage. 100 100 BufferedImage/TYPE_INT_RGB)]
+        (export-img "expected-path" "expected-image.jpg" "jpg" img))))
+  (it "handles tile cutting correctly."
+    (let [img (BufferedImage. 200 200 BufferedImage/TYPE_INT_RGB)]
+      (with-redefs [cut-tiles (fn [rows cols tile-size resized-img extension exp-path cuts format]
+                                 (should= 4 rows)
+                                 (should= 4 cols)
+                                 (should= 50 tile-size))]
+        (cut-square-image img 50 2 "jpg" "z_x_y" "dummy-path"))
+    )))
+
+(describe "cut-image"
+  (it "processes square images correctly."
+    (with-redefs [read-file (fn [path] (BufferedImage. 100 100 BufferedImage/TYPE_INT_RGB))
+                   cut-square-image (fn [img tile-size cuts extension format exp-path]
+                                      (should= 50 tile-size)
+                                      (should= 2 cuts))]
+      (cut-image "dummy-path" "50" "2" "#FFFFFF" "jpg" "z_x_y" "dummy-path")))
+  (it "processes non-square images correctly."
+    (with-redefs [read-file (fn [path] (BufferedImage. 100 50 BufferedImage/TYPE_INT_RGB))
+                   fill-to-square (fn [img bg-color] (BufferedImage. 100 100 BufferedImage/TYPE_INT_RGB))
+                   cut-square-image (fn [img tile-size cuts extension format exp-path]
+                                      (should= 50 tile-size)
+                                      (should= 2 cuts))]
+      (cut-image "dummy-path" "50" "2" "#FFFFFF" "jpg" "z_x_y" "dummy-path"))))

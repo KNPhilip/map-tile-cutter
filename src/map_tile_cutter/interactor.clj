@@ -44,16 +44,19 @@
   (let [tiles (num-tiles-from-cuts cuts)]
     [(int (Math/sqrt tiles)) (int (Math/sqrt tiles))]))
 
+(defn export-img [exp-path relative-path extension img]
+  (let [output-file (io/file exp-path relative-path)]
+    (io/make-parents output-file)
+    (ImageIO/write img extension output-file)))
+
 (defn cut-tiles [rows cols tile-size resized-img extension exp-path cuts format]
   (dotimes [row rows]
     (dotimes [col cols]
       (let [x (* col tile-size)
             y (* row tile-size)
             sub-img (.getSubimage resized-img x y tile-size tile-size)
-            relative-path (format-path format cuts col row extension)
-            output-file (io/file exp-path relative-path)]
-        (io/make-parents output-file)
-        (ImageIO/write sub-img extension output-file))))
+            relative-path (format-path format cuts col row extension)]
+        (export-img exp-path relative-path extension sub-img))))
   (alert (str "All tiles were cut out and exported to \"" exp-path "\"")))
 
 (defn cut-square-image [img tile-size cuts extension format exp-path]
@@ -75,6 +78,12 @@
     (.dispose g)
     bg-img))
 
+(defn export-square-image [img tile-size extension format exp-path]
+  (let [resized-img (resize-img img tile-size tile-size)
+        formatted-path (format-path format "0" "0" "0" extension)]
+    (export-img exp-path formatted-path extension resized-img)
+    (alert (str "The image was exported to \"" exp-path "\""))))
+
 (defn cut-image [img-path tile-size cuts bg-color extension format exp-path]
   (let [tile-size (Integer/parseInt tile-size)
         cuts (Integer/parseInt cuts)
@@ -85,4 +94,6 @@
         square-img (if is-square?
                      img
                      (fill-to-square img bg-color))]
-    (cut-square-image square-img tile-size cuts extension format exp-path)))
+    (if (zero? cuts)
+      (export-square-image square-img tile-size extension format exp-path)
+      (cut-square-image square-img tile-size cuts extension format exp-path))))

@@ -28,7 +28,7 @@
     (should-not-be-nil (validate-tile-size "-10"))
     (should-not-be-nil (validate-tile-size "0"))
     (should-not-be-nil (validate-tile-size nil)))
-  (it "returns nil for valid integer string."
+  (it "returns nil for valid positive integer string."
     (should-be-nil (validate-tile-size "256"))
     (should-be-nil (validate-tile-size "34"))))
 
@@ -37,9 +37,9 @@
     (should-not-be-nil (validate-cuts ""))
     (should-not-be-nil (validate-cuts "not-a-number"))
     (should-not-be-nil (validate-cuts "-3"))
-    (should-not-be-nil (validate-cuts "0"))
     (should-not-be-nil (validate-cuts nil)))
   (it "returns nil for valid integer string"
+    (should-be-nil (validate-cuts "0"))
     (should-be-nil (validate-cuts "2"))
     (should-be-nil (validate-cuts "7"))))
 
