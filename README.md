@@ -34,9 +34,11 @@ your picture will have to be perfectly squared. Otherwise, the system will resca
 fill out the rest with the background color input.
 
 Original Picture:
+
 !["Original  "](https://github.com/KNPhilip/map-tile-cutter/blob/main/docs/square.jpg)
 
 Exported Tiles:
+
 !["Export  "](https://github.com/KNPhilip/map-tile-cutter/blob/main/docs/exported-tiles.jpg)
 
 The format z/x_y means:
