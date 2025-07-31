@@ -1,0 +1,34 @@
+name: Continuous Deployment
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Prepare Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Install Clojure tools
+        uses: DeLaGuardo/setup-clojure@9.3
+        with:
+          lein: 2.9.8
+
+      - name: Build uberjar
+        run: lein uberjar
+
+      - name: Upload release artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/map-tile-cutter-*-standalone.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
