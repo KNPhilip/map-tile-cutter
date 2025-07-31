@@ -64,7 +64,14 @@
   (horizontal-panel
     :items [(button :text "Submit"
                     :listen [:action (fn [_]
-                              (validator/validate-and-submit frame))]
+                      (try
+                        (validator/validate-and-submit frame)
+                        (catch Exception e
+                          (alert frame
+                                 (str "An error occurred: " (.getMessage e))
+                                 :title "Error"
+                                 :type :error))
+                      ))]
             )]))
 
 (defn export-section [frame]
