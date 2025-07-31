@@ -2,7 +2,8 @@
   (:require [map-tile-cutter.widgets :refer :all]
             [map-tile-cutter.validator :as validator]
             [clojure.string :as str])
-  (:use seesaw.core))
+  (:use seesaw.core)
+  (:gen-class))
 
 (defn input-section [frame]
   (let [input-field (text :size [450 :by 30]
@@ -114,7 +115,11 @@
     (config! mainframe :content content)
     mainframe))
 
-(defn -main []
+(defn -main [& args]
+  (let [version (System/getProperty "java.version")]
+    (when (< (compare version "11") 0)
+      (println "ERROR: Java 11 or newer required. You are using" version)
+      (System/exit 1)))
   (native!)
   (invoke-later
     (-> (make-mainframe)
