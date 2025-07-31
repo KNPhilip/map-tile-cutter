@@ -4,6 +4,9 @@
   (:import [javax.imageio ImageIO])
   (:use seesaw.core))
 
+(defn read-file [path]
+  (ImageIO/read (io/file path)))
+
 (defn get-format-without-extension [format]
   (let [dot-idx (.lastIndexOf format ".")]
     (if (and (pos? dot-idx) (< dot-idx (count format)))
@@ -18,9 +21,6 @@
       "z/x_y" (str z "/" x "_" y "." extension)
       "z/x/y" (str z "/" x "/" y "." extension)
       (str z "_" x "_" y "." extension))))
-
-(defn read-file [path]
-  (ImageIO/read (io/file path)))
 
 (defn resize-img [img target-width target-height]
   (let [scaled-img (java.awt.image.BufferedImage. target-width target-height java.awt.image.BufferedImage/TYPE_INT_RGB)]
@@ -56,21 +56,6 @@
         (ImageIO/write sub-img extension output-file))))
   (alert (str "All tiles were cut out and exported to \"" exp-path "\"")))
 
-(defn cut-non-square-image [img tile-size cuts bg-color extension format exp-path]
-  (let [width (.getWidth img)
-        height (.getHeight img)
-        max-dimension (max width height)
-        new-dimension (int (Math/ceil (/ max-dimension tile-size)))
-        new-width (* new-dimension tile-size)
-        new-height (* new-dimension tile-size)
-        bg-img (create-bg-img new-width new-height bg-color)
-        g (.createGraphics bg-img)]
-    (.drawImage g img 0 0 width height nil)
-    (.dispose g)
-    (let [resized-img (resize-img bg-img new-width new-height)
-          [rows cols] (tiles-dimensions cuts)]
-      (cut-tiles rows cols tile-size resized-img extension exp-path cuts format))))
-
 (defn cut-square-image [img tile-size cuts extension format exp-path]
   (let [width (int (* (Math/pow 2 cuts) tile-size))
         height width
@@ -78,13 +63,26 @@
         [rows cols] (tiles-dimensions cuts)]
     (cut-tiles rows cols tile-size resized-img extension exp-path cuts format)))
 
+(defn fill-to-square [img bg-color]
+  (let [width (.getWidth img)
+        height (.getHeight img)
+        max-dimension (max width height)
+        new-width max-dimension
+        new-height max-dimension
+        bg-img (create-bg-img new-width new-height bg-color)
+        g (.createGraphics bg-img)]
+    (.drawImage g img 0 0 width height nil)
+    (.dispose g)
+    bg-img))
+
 (defn cut-image [img-path tile-size cuts bg-color extension format exp-path]
   (let [tile-size (Integer/parseInt tile-size)
         cuts (Integer/parseInt cuts)
         img (read-file img-path)
         width (.getWidth img)
         height (.getHeight img)
-        is-square? (= width height)]
-    (if is-square?
-      (cut-square-image img tile-size cuts extension format exp-path)
-      (cut-non-square-image img tile-size cuts bg-color extension format exp-path))))
+        is-square? (= width height)
+        square-img (if is-square?
+                     img
+                     (fill-to-square img bg-color))]
+    (cut-square-image square-img tile-size cuts extension format exp-path)))
