@@ -114,7 +114,8 @@
     (config! mainframe :content content)
     mainframe))
 
-(defn present-mainframe []
+(defn -main []
+  (native!)
   (invoke-later
     (-> (make-mainframe)
         pack!
