@@ -35,7 +35,7 @@ fill out the rest with the background color input.
 
 Original Picture:
 
-!["Original  "](https://github.com/KNPhilip/map-tile-cutter/blob/main/docs/square.jpg)
+<img src="https://github.com/KNPhilip/map-tile-cutter/blob/main/docs/square.jpg" alt="drawing" style="width:300px;height:300px"/>
 
 Exported Tiles:
 
