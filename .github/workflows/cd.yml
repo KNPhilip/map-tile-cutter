@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '24'
 
       - name: Install Clojure and Leiningen
         uses: DeLaGuardo/setup-clojure@9.3
